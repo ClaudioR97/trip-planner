@@ -1,0 +1,58 @@
+<div style="display: flex; flex-wrap: wrap; justify-content: center;" *ngIf="this.cityService.sharedVariables.isCitiesVisible()">
+    <mat-card>
+        <div
+            style="display: flex; flex-wrap: wrap; justify-content: space-between; padding-right: 15px; padding-top: 15px;">
+            <h2 style="padding: 0 0 0 15px; float: left;">{{this.titleCity}}</h2>
+            <mat-button-toggle-group #toggleGroup="matButtonToggleGroup">
+                <mat-button-toggle value="map" (change)="toggleButtonChange('map')" checked>Mapa</mat-button-toggle>
+                <mat-button-toggle value="lista" (change)="toggleButtonChange('lista')" disabled="{{this.isAddDisabled}}">Lista</mat-button-toggle>
+                <mat-button-toggle value="add" (change)="toggleButtonChange('add')" disabled="{{this.isAddDisabled}}">Add</mat-button-toggle>
+            </mat-button-toggle-group>
+            <button id="sync-button" mat-mini-fab style="float: right; background: gray !important;" color="primary"
+                (click)="sync()" matTooltip="Sync">
+                <mat-icon>sync</mat-icon>
+            </button>
+        </div>
+
+        <mat-card-content class="card-city">
+            <form class="card-city">
+                <a class="circle-link-pais" *ngFor="let city of cities">
+                    <img src="{{city.base_img || '../../../../../assets/icons/modern-planet.png'}}"
+                        title="{{city.nm_city}}" class="circle-link-city" (click)="clickCity(city)">
+                    <div class="edit-btn" (click)="editCity(city)">
+                        <button mat-mini-fab class="button-custon-edit" color="white">
+                            <mat-icon style="font-size: 15px !important; margin-top: 5px !important;">edit</mat-icon>
+                        </button>
+                        
+                    </div>
+                </a>
+                <mat-card-content class="card-city">
+                    <a class="circle-link-pais" title="Add trip" (click)="addCity()">
+                        <img src="../../../assets/icons/plus-signal.png" class="circle-link-city">
+                    </a>
+                </mat-card-content>
+            </form>
+        </mat-card-content>
+    </mat-card>
+
+    <add-tourist-spot *ngIf="toggleView.viewAdd"></add-tourist-spot>
+    <tourist-spot-list *ngIf="toggleView.viewList"></tourist-spot-list>
+    
+</div>
+<mat-card-content style="padding: 10px; align-self: self-end;">
+    <agm-map #map [latitude]="curLatitudeF" [longitude]="curLongitudeF" (mapReady)="onMapReady($event)" [zoom]="mapZoom"  [styles]="selectedMapStyle">
+        <a>
+            <agm-marker [latitude]="curLatitude" [longitude]="curLongitude" [iconUrl]="markerIconUrl">
+            </agm-marker>
+        </a>
+        <a>
+            <agm-marker *ngFor="let marker of markers" 
+                [latitude]="marker.locale.lat"
+                [longitude]="marker.locale.lng" 
+                [iconUrl]="getCustonIcon(marker)" 
+                [openInfoWindow]="true"
+                [title]="marker.nm"
+                ></agm-marker>
+        </a>
+    </agm-map>
+</mat-card-content>

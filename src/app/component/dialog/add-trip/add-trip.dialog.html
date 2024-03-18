@@ -1,0 +1,53 @@
+<mat-card>
+    <mat-card-content style="text-align: center;">
+        <form class="add-trip-form">
+            <div>
+                <input type="file" #fileInput id="uploadFile" (change)="uploadFileEvt($event)" name="uploadFile"
+                    multiple="multiple" accept="image/*" hidden />
+                <img [src]="base64Img" style="width: 100px; height: 100px; border-radius: 40px;">
+                <!-- Fetch selected filed on change -->
+            </div>
+            <div style="display: inline-flex;">
+                <button mat-mini-fab color="warn" (click)="resetImage()">
+                    <mat-icon>cancel</mat-icon>
+                </button>
+                <div style="width: 10px;"></div>
+                <button mat-mini-fab color="primary" (click)="fileInput.click()">
+                    <mat-icon>photo_camera_back</mat-icon>
+                </button>
+                <div style="width: 10px;"></div>
+                <button mat-mini-fab color="grey" (click)="deleteTrip()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+            <div class="field-cont">
+                <mat-form-field class="trip-field" [formGroup]="tripData">
+                    <mat-label>Trip name</mat-label>
+                    <input matInput formControlName="tripName"
+                        placeholder="Ex. Brazil">
+                </mat-form-field>
+                <mat-form-field class="trip-field">
+                    <mat-label>Data prevista</mat-label>
+                    <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                        <input matStartDate formControlName="start" placeholder="Data inicial">
+                        <input matEndDate formControlName="end" placeholder="Data final">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+                <mat-form-field class="trip-field" *ngIf="!dialog.dlgData.isEditing" style="width: 500px" [formGroup]="tripData">
+                    <mat-label>URL</mat-label>
+                    <input matInput type="url" formControlName="sheet_url"
+                        placeholder="Ex. https://www.sheet.com.br">
+                </mat-form-field>
+                <mat-form-field class="field-full-width" [formGroup]="tripData" >
+                    <mat-label>Observações sobre a viagem</mat-label>
+                    <textarea matInput formControlName="obs"
+                        placeholder="Ex. It makes me feel..."></textarea>
+                </mat-form-field>
+            </div>
+
+            <button mat-raised-button (click)="saveTrip()">Salve</button>
+        </form>
+    </mat-card-content>
+</mat-card>

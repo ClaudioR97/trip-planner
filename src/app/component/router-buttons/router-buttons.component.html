@@ -1,0 +1,39 @@
+<div id="card-container" class="card-container">
+	<a class="card" rel="noopener" [routerLink]="'cities'" (click)="onClick()" >
+
+		<span class="material-icons" width="24" height="24" style="padding: 5px;">local_airport</span>
+		<span>Viagens</span>
+		<svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+			<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+		</svg> </a>
+
+	<a class="card" rel="noopener" [routerLink]="'backoffice'">
+		<span class="material-icons" width="24" height="24" style="padding: 5px;">
+			monetization_on
+		</span>
+		<span>Custos e Gastos</span>
+		<svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+			<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+		</svg>
+	</a>
+
+	<a class="card" rel="noopener" [routerLink]="'checklist'">
+		<span class="material-icons" width="24" height="24" style="padding: 5px;">
+			assignment_turned_in
+		</span>
+		<span>Checklist</span>
+		<svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+			<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+		</svg>
+	</a>
+
+	<a class="card" rel="noopener" (click)="editClick()">
+		<span class="material-icons" width="24" height="24" style="padding: 5px;">
+			edit
+		</span>
+		<span>Edit</span>
+		<svg class="material-icons" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+			<path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />
+		</svg>
+	</a>
+</div>

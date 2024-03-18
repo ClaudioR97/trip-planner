@@ -1,0 +1,10 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div mat-dialog-content id="modal-dialog">
+    <router-buttons *ngIf="data.routeTrips"></router-buttons>
+    <add-trip *ngIf="data.addTrip"></add-trip>
+    <app-add-city *ngIf="data.addCity"></app-add-city>
+</div>
+<div *ngIf="!data.hideButton" mat-dialog-actions style="float: right;">
+    <button *ngIf="data.isQuestion" mat-button mat-dialog-close>No</button>
+    <button mat-button mat-dialog-close cdkFocusInitial>Ok</button>
+</div>

@@ -1,0 +1,32 @@
+<mat-card-content style="text-align: center; display: flex;">
+    <form class="add-trip-form">
+        <div>
+            <input type="file" #fileInput id="uploadFile" (change)="uploadFileEvt($event)" name="uploadFile"
+                multiple="multiple" accept="image/*" hidden />
+            <img [src]="cityData.base_img || base64Img" style="width: 100px; height: 100px; border-radius: 40px;">
+            <!-- Fetch selected filed on change -->
+        </div>
+        <br>
+        <div style="display: inline-flex;">
+            <button mat-mini-fab color="warn" (click)="resetImage()">
+                <mat-icon>cancel</mat-icon>
+            </button>
+            <div style="width: 10px;"></div>
+            <button mat-mini-fab color="primary" (click)="fileInput.click()">
+                <mat-icon>photo_camera_back</mat-icon>
+            </button>
+            <div style="width: 10px;"></div>
+            <button mat-mini-fab color="grey" (click)="deletePlace()">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+        <br>
+        <mat-form-field style="margin-top: 15px; padding: 5px;">
+            <mat-label>City name</mat-label>
+            <input matInput required *ngIf="true" value="{{this.cityName}}" (change)="onChange($event)"
+                placeholder="Ex. Brazil">
+        </mat-form-field>
+        <br>
+        <button mat-raised-button (click)="onSaveClick()">Salve</button>
+    </form>
+</mat-card-content>

@@ -1,0 +1,35 @@
+<div mat-dialog-content>
+    <mat-card>
+        <mat-card-content style="text-align: center;">
+            <form class="add-trip-form">
+                <div>
+                    <input type="file" #fileInput id="uploadFile" (change)="uploadFileEvt($event)" name="uploadFile"
+                        multiple="multiple" accept="image/*" hidden />
+                    <img [src]="base64Img" style="width: 100px; height: 100px; border-radius: 40px;">
+                    <!-- Fetch selected filed on change -->
+                </div>
+                <div style="display: inline-flex;">
+                    <button mat-mini-fab color="warn" (click)="resetImage()">
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                    <div style="width: 10px;"></div>
+                    <button mat-mini-fab color="primary" (click)="fileInput.click()">
+                        <mat-icon>photo_camera_back</mat-icon>
+                    </button>
+                </div>
+                <mat-form-field class="field-full-width">
+                    <mat-label>Trip name</mat-label>
+                    <input matInput *ngIf="true" [(ngModel)]="tripName" [ngModelOptions]="{standalone: true}"
+                        placeholder="Ex. Brazil">
+                </mat-form-field>
+                <mat-card-content>
+                    <mat-form-field style="padding: 25px;">
+                        <input id="autocomplete-input" matInput [formControl]="autocompleteInput"
+                            placeholder="Digite um local">
+                    </mat-form-field>
+                </mat-card-content>
+                <button mat-raised-button>Salve</button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div>

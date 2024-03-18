@@ -1,0 +1,16 @@
+<div *ngIf="this.sharedVariables.isTripsVisible()" style="align-content: center;">
+    <mat-card-content class="card-city">
+        <form id="planned-trips" style="display: flex; flex-wrap: wrap;">
+            <a id="link-c" *ngFor="let trip of trips" style="display: flex;" title="trip">
+                <div class="country-link">
+                    <img src={{this.trip.base_img}} class="country-link" (click)="countryClick(this.trip)">
+                </div>
+            </a>
+        </form>
+    </mat-card-content>
+    <mat-card-content class="card-city">
+        <a class="circle-link-pais" title="Add trip" (click)="addTrip()">
+            <img src="../../../assets/icons/plus-signal.png" class="circle-link-city">
+        </a>
+    </mat-card-content>
+</div>

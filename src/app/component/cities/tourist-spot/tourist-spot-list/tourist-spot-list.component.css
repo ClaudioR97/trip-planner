@@ -1,0 +1,14 @@
+@import url("../../../../app.component.css");
+
+.custom-outlined-icon {
+    font-family: 'Material Icons'; /* Use regular font family */
+    border: 2px solid currentColor; /* Add a solid border */
+    border-radius: 50%; /* Optional: Adjust border-radius as needed */
+    padding: 4px; /* Optional: Adjust padding as needed */
+  }
+  
+  .custom-outlined-icon-button {
+    background-color: transparent; /* Set button background to transparent */
+    border: none; /* Remove button border */
+  }
+  

@@ -1,0 +1,19 @@
+@import url(../../app.component.css);
+
+.toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background: #01BAEF;
+    color: white;
+    font-weight: 600;
+    z-index: 1000;
+}
+
+.toolbar img {
+    margin: 0 16px;
+}

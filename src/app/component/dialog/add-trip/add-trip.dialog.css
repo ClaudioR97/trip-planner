@@ -1,0 +1,13 @@
+@import url('../../../app.component.css');
+
+.field-cont {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 15px;
+}
+
+.trip-field {
+    padding: 5px;
+}

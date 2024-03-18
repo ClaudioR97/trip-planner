@@ -1,0 +1,107 @@
+@import url("../../app.component.css");
+
+.card-panel {
+    height: 98%;
+    width: fit-content;
+    max-width: 80%;
+}
+
+.map-screen {
+    height: 50vh;
+    width: 70vw;
+    max-width: 85vw;
+    margin: 5px;
+    box-sizing: border-box;
+}
+
+.fields {
+    margin: 0 12px;
+}
+
+.circle-link-pais {
+    height: 60px;
+    width: 60px;
+    border-radius: 40px;
+    margin: 8px;
+    background-color: white;
+    border: 1px solid #eeeeee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: 1s ease-out;
+}
+
+.circle-link-city {
+    height: 95%;
+    width: 95%;
+    border-radius: 40px;
+    background-color: white;
+    border: 1px solid #eeeeee;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 1s ease-out;
+}
+
+.card-city {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.example-right-align {
+    text-align: right;
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+    display: none;
+}
+
+.list-container {
+    height: fit-content;
+    width: fit-content;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    padding: 5px;
+}
+
+.list-box-table {
+    width: fit-content;
+    margin: 5px;
+    box-sizing: border-box;
+}
+
+.card-lista {
+    all: unset;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+.card-mapa {
+    all: unset;
+    height: 50vh;
+    width: 85vw;
+    padding: 6px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease-in-out;
+}
+
+agm-map {
+    height: 300px;
+}
+
+mat-button-toggle.checked {
+    color: black;
+    font-stretch: expanded;
+}
