@@ -1,7 +1,8 @@
 <mat-card id="add-panel">
   <mat-form-field style="padding-top: 25px; padding-left: 16px; padding-right: 16px;">
-    <input id="autocomplete-input" matInput [formControl]="autocompleteInput" placeholder="Digite um local">
+    <input id="autocomplete-input" matInput placeholder="Digite um local">
   </mat-form-field>
+
   <mat-card-content style="display: grid;">
     <mat-checkbox (change)="isAccommodation = $event.checked">Acomodação</mat-checkbox>
 

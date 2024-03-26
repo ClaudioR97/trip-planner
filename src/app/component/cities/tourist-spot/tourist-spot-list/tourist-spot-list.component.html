@@ -1,28 +1,37 @@
-<div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource">
+<div style="padding: 10px;">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <ng-container matColumnDef="nm">
-      <th mat-header-cell *matHeaderCellDef>Local</th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Local</th>
       <td mat-cell *matCellDef="let element">{{ element.nm }}</td>
     </ng-container>
-    <ng-container matColumnDef="obs">
-      <th mat-header-cell *matHeaderCellDef>Obs</th>
-      <td mat-cell *matCellDef="let element">{{ element.obs }}</td>
-    </ng-container>
-    <ng-container matColumnDef="viewed">
-      <th mat-header-cell *matHeaderCellDef>Visto</th>
+    <!--<ng-container class="th-class" matColumnDef="obs">
+      <th class="th-class" mat-header-cell *matHeaderCellDef mat-sort-header>Obs</th>
+      <td class="th-class" mat-cell *matCellDef="let element" [matTooltip]="element.obs">{{ element.obs }}</td>
+    </ng-container>-->
+    <ng-container style="max-width: 100px;" matColumnDef="viewed">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Visto</th>
       <td mat-cell *matCellDef="let element">
         <button *ngIf="this.element.viewed" mat-icon-button (click)="checkRecord(this.element)">
-          <mat-icon style="color: cornflowerblue;">task_alt</mat-icon>
+          <span class="material-symbols-outlined" style="color: cornflowerblue;">
+            where_to_vote
+            </span>
         </button>
         <button *ngIf="!this.element.viewed" mat-icon-button (click)="checkRecord(this.element)">
-          <mat-icon style="color: cornflowerblue;">radio_button_unchecked</mat-icon>
+          <span class="material-symbols-outlined">
+            location_on
+            </span>
         </button>
         <button mat-icon-button (click)="checkRecord(this.element)">
-          <mat-icon>edit</mat-icon>
+          <span class="material-symbols-outlined">
+            edit
+          </span>
         </button>
         <button mat-icon-button (click)="checkRecord(this.element)">
-          <mat-icon>delete</mat-icon>
+          <!-- <mat-icon>delete</mat-icon> -->
+          <span class="material-symbols-outlined" style="color: #ec2300;">
+            delete
+          </span>
         </button>
       </td>
     </ng-container>

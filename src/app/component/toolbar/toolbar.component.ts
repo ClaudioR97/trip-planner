@@ -1,5 +1,5 @@
 import { SharedVariables } from './../../shared/shared.variables';
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-toolbar',
@@ -9,7 +9,7 @@ import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 export class ToolbarComponent implements OnInit {
   
   isDarkMode: boolean = true;
-  constructor(public sharedVariables: SharedVariables, private renderer: Renderer2, private elementRef: ElementRef) {
+  constructor(public sharedVariables: SharedVariables, private elementRef: ElementRef) {
 
   }
 
@@ -31,8 +31,8 @@ export class ToolbarComponent implements OnInit {
     } else {
       document.body.style.background = '';
       event.currentTarget.parentElement.style.background = '#01BAEF'
+      backCardColor = '#fafafa';
     }
-    this.renderer.setStyle(this.elementRef.nativeElement, '--button-color', backCardColor);
     this.isDarkMode = !this.isDarkMode;
   }
 }

@@ -1,14 +1,12 @@
 import { TouristSpotListComponent } from './tourist-spot/tourist-spot-list/tourist-spot-list.component';
-import { DARK_MODE_MAP, DAY_MODE_MAP } from './../../shared/shared.consts';
+import { DARK_MODE_MAP, DAY_MODE_MAP, NEW_DARK_MODE } from './../../shared/shared.consts';
 import { City } from './../../shared/model/city.model';
 import { Component, OnInit, OnDestroy, destroyPlatform, ViewChild, AfterContentInit, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CityService } from 'src/app/shared/services/city/city.service';
 import { DialogUtils } from '../dialog/dialog.utils';
-import { MapsAPILoader } from '@agm/core';
-import { AgmMap, AgmMarker } from '@agm/core';
-import { FormControl } from '@angular/forms';
 import { TouristSpot } from 'src/app/shared/model/tourist-spot.model';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
+import { GoogleMap } from '@angular/google-maps';
 
 @Component({
   selector: 'app-cities',
@@ -20,13 +18,10 @@ export class CitiesComponent implements OnInit, AfterContentInit {
   public cities: City[] = [];
   toggleView: any = { viewList: false, viewAdd: false };
   destroy: any;
-  @ViewChild('map') map: AgmMap;
+  @ViewChild('map') map: GoogleMap;
   @ViewChild('fileInput') fileInput: ElementRef;
 
-  curLatitude: number;
-  curLongitude: number;
-  curLatitudeF: number;
-  curLongitudeF: number;
+  public checkedCity: string = '';
   markerIconUrl: string = '../../../assets/icons/mochila.png';
   openingHour: any;
   address: HTMLElement;
@@ -49,6 +44,12 @@ export class CitiesComponent implements OnInit, AfterContentInit {
   // Bind the selected map style dynamically based on the time
   selectedMapStyle: any;
 
+  googleCenter: google.maps.LatLngLiteral;
+  currentLocation: any;
+  options: google.maps.MapOptions = {
+    styles: DARK_MODE_MAP as google.maps.MapTypeStyle[]
+  };
+
   constructor(
     public cityService: CityService,
     public dialog: DialogUtils) {
@@ -59,6 +60,8 @@ export class CitiesComponent implements OnInit, AfterContentInit {
     this.isAddDisabled = true;
     this.cities = this.cityService.getCities();
     this.getCurrentLocation();
+    
+    this.options.styles = (this.isDayTime ? DAY_MODE_MAP : DARK_MODE_MAP) as google.maps.MapTypeStyle[];
   }
 
   ngOnInit(): void {
@@ -67,7 +70,6 @@ export class CitiesComponent implements OnInit, AfterContentInit {
 
   onMapReady(map: any) {
     this.centerLiveLocation();
-    this.selectedMapStyle = this.isDayTime ? DAY_MODE_MAP : DARK_MODE_MAP;
     map.setOptions({ fullscreenControl: true });
   }
 
@@ -99,8 +101,23 @@ export class CitiesComponent implements OnInit, AfterContentInit {
 
         new Promise((resolve) => {
           navigator.geolocation.getCurrentPosition((pos) => {
-            this.curLatitude = pos.coords.latitude;
-            this.curLongitude = pos.coords.longitude;
+            if (!this.googleCenter) {
+              this.googleCenter = {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude
+              }
+            }
+
+            this.currentLocation = {
+              position: {
+                lat: pos.coords.latitude,
+                lng: pos.coords.longitude
+              },
+              optimized: true,
+              options: {
+                animation: google.maps.Animation.BOUNCE,
+              }
+            }
             resolve(pos);
           });
         });
@@ -130,19 +147,37 @@ export class CitiesComponent implements OnInit, AfterContentInit {
 
   clickCity(city: City) {
     this.titleCity = city.nm_city;
+    this.checkedCity = city.id || '';
     this.markers = [];
     this.isAddDisabled = false;
     this.cityService.getTouristSpots(city.id as string).then((data: any) => {
       data.forEach((mark: any) => {
-        this.markers.push(mark);
+        const _mark = {
+          position: {
+            lat: mark.locale.lat,
+            lng: mark.locale.lng
+          },
+          optimized: true,
+          options: {
+            animation: google.maps.Animation.BOUNCE,
+          },
+          obs: mark.obs,
+          content: mark.openingHour,
+          place_url: mark.place_url,
+          viewed: mark.viewed,
+          website: mark.website,
+          nm: mark.nm,
+          is_accommodation: mark.is_accommodation
+        };
+        this.markers.push(_mark);
       });
 
       const isThereAccom: any[] = this.markers.filter((data) => data.is_accommodation === true);
-      
+
       if (isThereAccom.length === 0) {
         this.setAvgCoord(data);
       } else {
-        this.mapZoom = 18;
+        this.mapZoom = 15;
       }
 
       if (this.touristSpotListComp) {
@@ -153,6 +188,7 @@ export class CitiesComponent implements OnInit, AfterContentInit {
 
   sync(resetTButton: boolean = true) {
     this.titleCity = 'Cidades';
+    this.checkedCity = '';
     this.markers = [];
     this.tourSpotDataList = [];
     this.isAddDisabled = true;
@@ -171,8 +207,11 @@ export class CitiesComponent implements OnInit, AfterContentInit {
   centerLiveLocation() {
     new Promise((resolve) => {
       navigator.geolocation.getCurrentPosition((pos) => {
-        this.curLatitudeF = pos.coords.latitude;
-        this.curLongitudeF = pos.coords.longitude;
+        this.googleCenter = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        };
+        this.mapZoom = 18;
         resolve(pos);
       });
     });
@@ -194,8 +233,7 @@ export class CitiesComponent implements OnInit, AfterContentInit {
     let icon = '';
 
     if (data.is_accommodation) {
-      this.curLatitudeF = data.locale.lat;
-      this.curLongitudeF = data.locale.lng;
+      this.googleCenter = data.position;
       icon = '../../../assets/icons/hotel.png';
     } else if (data.viewed) {
       icon = '../../../assets/icons/blue-marker.png';
@@ -215,8 +253,10 @@ export class CitiesComponent implements OnInit, AfterContentInit {
     const avgLng = sumLng / coordinates.length;
     const avgLat = sumLat / coordinates.length;
 
-    this.curLatitudeF = avgLat;
-    this.curLongitudeF = avgLng;
+    this.googleCenter = {
+      lat: avgLat,
+      lng: avgLng
+    };
     this.mapZoom = 13;
   }
 }

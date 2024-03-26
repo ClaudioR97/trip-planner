@@ -35,11 +35,13 @@ import { CitiesComponent } from './component/cities/cities.component';
 import { MapComponent } from './component/cities/map/map.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AddCityComponent } from './component/dialog/add-city/add-city.component';
-import { AgmCoreModule } from '@agm/core';
-import { AddTourSpotComponent } from './component/dialog/add-tour-spot/add-tour-spot.component';
 import { AppDateFormatCustom, MY_DATE_FORMATS } from './app-date-format.custom';
 import { AddTouristSpotComponent } from './component/cities/tourist-spot/add-tourist-spot/add-tourist-spot.component';
 import { TouristSpotListComponent } from './component/cities/tourist-spot/tourist-spot-list/tourist-spot-list.component';
+import { AgmCoreModule } from '@agm/core';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -54,7 +56,6 @@ import { TouristSpotListComponent } from './component/cities/tourist-spot/touris
     CitiesComponent,
     MapComponent,
     AddCityComponent,
-    AddTourSpotComponent,
     AddTouristSpotComponent,
     TouristSpotListComponent
   ],
@@ -78,9 +79,12 @@ import { TouristSpotListComponent } from './component/cities/tourist-spot/touris
     MatExpansionModule,
     MatTableModule, 
     MatPaginatorModule,
+    MatTooltipModule,
     FormsModule,
     ReactiveFormsModule,
     AngularFireDatabaseModule,
+    GoogleMapsModule,
+    MatAutocompleteModule,
     AgmCoreModule.forRoot({
       apiKey: environment.firebase.apiKey,
       libraries: ['places']

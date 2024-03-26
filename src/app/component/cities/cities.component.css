@@ -97,8 +97,11 @@ input.example-right-align::-webkit-inner-spin-button {
     transition: all 0.2s ease-in-out;
 }
 
-agm-map {
-    height: 300px;
+.map-style {
+    min-height: 300px !important;
+    min-width: 300px;
+    height: 100%;
+    width: 90% !important;
 }
 
 mat-button-toggle.checked {

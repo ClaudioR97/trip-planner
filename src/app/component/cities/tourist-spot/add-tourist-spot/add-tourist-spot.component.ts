@@ -1,5 +1,5 @@
-import { MapsAPILoader } from '@agm/core';
-import { Component, AfterContentInit } from '@angular/core';
+import { TouristSpot } from './../../../../shared/model/tourist-spot.model';
+import { Component, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CitiesComponent } from '../../cities.component';
 
@@ -10,57 +10,79 @@ import { CitiesComponent } from '../../cities.component';
 })
 export class AddTouristSpotComponent implements AfterContentInit {
   autocomplete: google.maps.places.Autocomplete;
-  autocompleteInput: FormControl = new FormControl();
+  // @ViewChild('autocomplete-input') autocompleteInput: FormControl = new FormControl();
   isAccommodation: boolean = false;
   observation: string;
+  curTourSpotData: TouristSpot;
 
-  constructor(public mapsAPILoader: MapsAPILoader, private cities: CitiesComponent) { }
+  autocompleteControl = new FormControl();
+  @ViewChild('autocompleteInput') autocompleteInput: ElementRef<HTMLInputElement>;
+
+
+  constructor(private cities: CitiesComponent,) { }
 
   ngAfterContentInit(): void {
     this.loadAutoComplete();
   }
 
   onSaveClick() {
-    //this.markers.push(this.tourSpotData as any);
+    this.curTourSpotData.viewed = false;
+    this.curTourSpotData.is_accommodation = this.isAccommodation;
+    this.curTourSpotData.obs = this.observation;
+    this.cities.cityService.addTouristSpot(this.cities.checkedCity, this.curTourSpotData).then(() => {
+      this.curTourSpotData = {};
+      this.isAccommodation = false;
+      this.observation = '';
+      const ele: any = document.getElementById('add-info');
+      ele.innerHTML = '';
+      this.autocompleteInput.nativeElement.value = '';
+    });
   }
 
   loadAutoComplete() {
-    this.mapsAPILoader.load().then(() => {
-      setTimeout(() => {
-        this.autocomplete = new google.maps.places.Autocomplete(
-          document.getElementById('autocomplete-input') as HTMLInputElement
-        );
-        this.autocomplete.addListener('place_changed', () => {
-          // Evento para quando uma seleção é feita no campo de autocomplete
-          const place: google.maps.places.PlaceResult = this.autocomplete.getPlace();
-          if (place.geometry) {
-            const markerData = {
-              locale: {
-                lat: place.geometry.location.lat(),
-                lng: place.geometry.location.lng()
-              },
-              nm: place.name,
-              place_url: place.url,
-              openingHour: '',
-              website: ''
-            }
-            if (place.opening_hours && place.opening_hours.weekday_text) {
-              markerData.openingHour = place.opening_hours.weekday_text.toString().replaceAll(/,/g, '<br>')
-              const ele: any = document.getElementById('add-info');
-              ele.innerHTML = '<b>Horário de funcionamento</b><br>' +
-                markerData.openingHour +
-                '<br><b>Endereço</b><br>' +
-                place.adr_address;
-              //this.address = place.adr_address as unknown as HTMLElement;
-            }
-            if (place.website) {
-              markerData.website = place.website;
-            }
-            this.cities.tourSpotData = markerData;
-          }
-          console.log(place); // Aqui você pode processar os dados do lugar selecionado
-        });
-      }, 1000);
+    const center = this.cities.googleCenter;
+    const defaultBounds = {
+      north: center.lat + 0.1,
+      south: center.lat - 0.1,
+      east: center.lng + 0.1,
+      west: center.lng - 0.1
+    };
+    const options = {
+      bounds: defaultBounds,
+      fields: ['ALL'],
+      strictBounds: false
+    };
+    const input = document.getElementById('autocomplete-input') as HTMLInputElement;
+    const _autocomplete = new google.maps.places.Autocomplete(input, options);
+    this.autocomplete = _autocomplete;
+
+    this.autocomplete.addListener('place_changed', () => {
+      const place: any = this.autocomplete.getPlace();
+      if (place.geometry) {
+        const markerData = {
+          locale: {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+          },
+          nm: place.name,
+          place_url: place.url,
+          openingHour: '',
+          website: ''
+        }
+        if (place.opening_hours && place.opening_hours.weekday_text) {
+          markerData.openingHour = place.opening_hours.weekday_text.toString().replaceAll(/,/g, '<br>')
+          const ele: any = document.getElementById('add-info');
+          ele.innerHTML = '<b>Horário de funcionamento</b><br>' +
+            markerData.openingHour +
+            '<br><b>Endereço</b><br>' +
+            place.adr_address;
+        }
+        if (place.website) {
+          markerData.website = place.website;
+        }
+        this.cities.tourSpotData = markerData;
+        this.curTourSpotData = markerData;
+      }
     });
   }
 }

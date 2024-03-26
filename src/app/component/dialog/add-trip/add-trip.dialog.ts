@@ -1,7 +1,7 @@
 import { ElementRef, ViewChild, Component, OnInit, AfterContentInit } from '@angular/core';
 import { DialogUtils } from '../dialog.utils';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Trip } from '../../../shared/model/trip.model';
 import { TripService } from '../../../shared/services/trip/trip.service';
 

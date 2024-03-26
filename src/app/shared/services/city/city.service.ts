@@ -50,14 +50,18 @@ export class CityService {
     });
   }
 
-  addTouristSpot(city: string, touristSpotData: TouristSpot) {
-    this.cityRef.doc(city).collection('/tourist_spot/').add(touristSpotData);
+  getTouristSpotCol(city: string) {
+    return this.cityRef.doc(city).collection('/tourist_spot/');
   }
-
+  
+  addTouristSpot(city: string, touristSpotData: TouristSpot) {
+    return this.getTouristSpotCol(city).add(touristSpotData);
+  }
+  
   getTouristSpots(city: string) {
     this.touristSpotData = [];
     return new Promise(async (resolve, reject) => {
-      const tourismColl = await this.cityRef.doc(city).collection('/tourist_spot/').get();
+      const tourismColl = await this.getTouristSpotCol(city).get();
       await tourismColl.forEach(tourismCol => {
         tourismCol.docs.forEach(doc => {
           const data: TouristSpot = doc.data();
