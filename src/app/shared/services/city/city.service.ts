@@ -51,11 +51,20 @@ export class CityService {
   }
 
   getTouristSpotCol(city: string) {
-    return this.cityRef.doc(city).collection('/tourist_spot/');
+    this.touristSpot = this.cityRef.doc(city).collection('/tourist_spot/');
+    return this.touristSpot;
   }
   
   addTouristSpot(city: string, touristSpotData: TouristSpot) {
-    return this.getTouristSpotCol(city).add(touristSpotData);
+    const clearData = Object.fromEntries(Object.entries(touristSpotData).filter(([_, v]) => v !== undefined));
+    return this.getTouristSpotCol(city).add(clearData).then(data => {
+      clearData['id'] = data.id;
+      return clearData;
+    });
+  }
+
+  deleteTouristSpot(touristSpotID: string) {
+    return this.touristSpot.doc(touristSpotID).ref.delete();
   }
   
   getTouristSpots(city: string) {

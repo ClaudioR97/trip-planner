@@ -42,6 +42,7 @@ import { AgmCoreModule } from '@agm/core';
 import { GoogleMapsModule } from '@angular/google-maps';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { GoogleMapsService } from './shared/services/google-maps/google.maps.service';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   ],
   providers: [
     { provide: DateAdapter, useClass: AppDateFormatCustom },
-    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    GoogleMapsService
   ],
   bootstrap: [AppComponent]
 })

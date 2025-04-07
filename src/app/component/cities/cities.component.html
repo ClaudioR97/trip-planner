@@ -3,7 +3,9 @@
     <mat-card>
         <div
             style="display: flex; flex-wrap: wrap; justify-content: space-between; padding-right: 15px; padding-top: 15px;">
-            <h2 style="padding: 0 0 0 15px; float: left;">{{this.titleCity}}</h2>
+            <div style="padding: 5px;"></div>
+            <h2 style="float: left;">{{this.titleCity}}</h2>
+            <div style="padding: 5px;"></div>
             <mat-button-toggle-group #toggleGroup="matButtonToggleGroup">
                 <mat-button-toggle value="map" (change)="toggleButtonChange('map')" checked>Mapa</mat-button-toggle>
                 <mat-button-toggle value="lista" (change)="toggleButtonChange('lista')"
@@ -11,6 +13,7 @@
                 <mat-button-toggle value="add" (change)="toggleButtonChange('add')"
                     disabled="{{this.isAddDisabled}}">Add</mat-button-toggle>
             </mat-button-toggle-group>
+            <div style="padding: 5px;"></div>
             <button id="sync-button" mat-mini-fab style="float: right; background: gray !important;" color="primary"
                 (click)="sync()" matTooltip="Sync">
                 <mat-icon>sync</mat-icon>
@@ -58,12 +61,9 @@
                 ></agm-marker>
         </a>
     </agm-map>  -->
-    <google-map #map height="500px" width="100%" [center]="googleCenter" [zoom]="mapZoom" [options]="options">
+    <google-map #map height="500px" width="100%" [center]="googleCenter" [zoom]="mapZoom" [options]="options" (mapInitialized)="onMapReady($event)">
         <map-marker [position]="currentLocation.position" [icon]="markerIconUrl"></map-marker>
-        <map-marker
-            *ngFor="let marker of markers" 
-            [position]="marker.position"
-            [title]="marker.nm" 
+        <map-marker *ngFor="let marker of markers" [position]="marker.position" [title]="marker.nm"
             [icon]="this.getCustonIcon(marker)">
         </map-marker>
     </google-map>

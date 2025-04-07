@@ -1,5 +1,6 @@
+import { GoogleMapsService } from './../../../../shared/services/google-maps/google.maps.service';
 import { TouristSpot } from './../../../../shared/model/tourist-spot.model';
-import { Component, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterContentInit, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { CitiesComponent } from '../../cities.component';
 
@@ -16,26 +17,31 @@ export class AddTouristSpotComponent implements AfterContentInit {
   curTourSpotData: TouristSpot;
 
   autocompleteControl = new FormControl();
-  @ViewChild('autocompleteInput') autocompleteInput: ElementRef<HTMLInputElement>;
+  @ViewChild('autocompleteInput', { static: false }) autocompleteInput: ElementRef<HTMLInputElement>;
 
 
-  constructor(private cities: CitiesComponent,) { }
+  constructor(private cities: CitiesComponent, 
+    private googleMapsService: GoogleMapsService, 
+    private ngZone: NgZone) { }
 
   ngAfterContentInit(): void {
-    this.loadAutoComplete();
+    this.googleMapsService.loadApi().then(() => {
+      this.loadAutoComplete();
+    });
   }
 
   onSaveClick() {
     this.curTourSpotData.viewed = false;
     this.curTourSpotData.is_accommodation = this.isAccommodation;
     this.curTourSpotData.obs = this.observation;
-    this.cities.cityService.addTouristSpot(this.cities.checkedCity, this.curTourSpotData).then(() => {
+    this.cities.cityService.addTouristSpot(this.cities.checkedCity.id as string, this.curTourSpotData).then((data: any) => {
       this.curTourSpotData = {};
       this.isAccommodation = false;
       this.observation = '';
       const ele: any = document.getElementById('add-info');
       ele.innerHTML = '';
       this.autocompleteInput.nativeElement.value = '';
+      this.cities.markers.push(data);
     });
   }
 

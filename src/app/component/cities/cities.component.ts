@@ -21,7 +21,7 @@ export class CitiesComponent implements OnInit, AfterContentInit {
   @ViewChild('map') map: GoogleMap;
   @ViewChild('fileInput') fileInput: ElementRef;
 
-  public checkedCity: string = '';
+  public checkedCity: City;
   markerIconUrl: string = '../../../assets/icons/mochila.png';
   openingHour: any;
   address: HTMLElement;
@@ -45,7 +45,14 @@ export class CitiesComponent implements OnInit, AfterContentInit {
   selectedMapStyle: any;
 
   googleCenter: google.maps.LatLngLiteral;
-  currentLocation: any;
+  currentLocation: any = {
+    position: {
+      lat: -26.9144341,
+      lng: -49.0805821
+    },
+    optimized: true
+  };
+
   options: google.maps.MapOptions = {
     styles: DARK_MODE_MAP as google.maps.MapTypeStyle[]
   };
@@ -60,7 +67,7 @@ export class CitiesComponent implements OnInit, AfterContentInit {
     this.isAddDisabled = true;
     this.cities = this.cityService.getCities();
     this.getCurrentLocation();
-    
+
     this.options.styles = (this.isDayTime ? DAY_MODE_MAP : DARK_MODE_MAP) as google.maps.MapTypeStyle[];
   }
 
@@ -69,8 +76,9 @@ export class CitiesComponent implements OnInit, AfterContentInit {
   }
 
   onMapReady(map: any) {
-    this.centerLiveLocation();
-    map.setOptions({ fullscreenControl: true });
+    debugger;
+    /*this.centerLiveLocation();
+    map.setOptions({ fullscreenControl: true });*/
   }
 
   editCity(_city: City) {
@@ -115,7 +123,7 @@ export class CitiesComponent implements OnInit, AfterContentInit {
               },
               optimized: true,
               options: {
-                animation: google.maps.Animation.BOUNCE,
+                animation: 1.0,
               }
             }
             resolve(pos);
@@ -147,19 +155,20 @@ export class CitiesComponent implements OnInit, AfterContentInit {
 
   clickCity(city: City) {
     this.titleCity = city.nm_city;
-    this.checkedCity = city.id || '';
+    this.checkedCity = city;
     this.markers = [];
     this.isAddDisabled = false;
     this.cityService.getTouristSpots(city.id as string).then((data: any) => {
       data.forEach((mark: any) => {
         const _mark = {
+          id: mark.id,
           position: {
             lat: mark.locale.lat,
             lng: mark.locale.lng
           },
           optimized: true,
           options: {
-            animation: google.maps.Animation.BOUNCE,
+            animation: 1.0,
           },
           obs: mark.obs,
           content: mark.openingHour,
@@ -177,6 +186,7 @@ export class CitiesComponent implements OnInit, AfterContentInit {
       if (isThereAccom.length === 0) {
         this.setAvgCoord(data);
       } else {
+        this.googleCenter = isThereAccom[0].position;
         this.mapZoom = 15;
       }
 
@@ -188,7 +198,7 @@ export class CitiesComponent implements OnInit, AfterContentInit {
 
   sync(resetTButton: boolean = true) {
     this.titleCity = 'Cidades';
-    this.checkedCity = '';
+    this.checkedCity = new City();
     this.markers = [];
     this.tourSpotDataList = [];
     this.isAddDisabled = true;
@@ -233,7 +243,6 @@ export class CitiesComponent implements OnInit, AfterContentInit {
     let icon = '';
 
     if (data.is_accommodation) {
-      this.googleCenter = data.position;
       icon = '../../../assets/icons/hotel.png';
     } else if (data.viewed) {
       icon = '../../../assets/icons/blue-marker.png';
@@ -254,8 +263,8 @@ export class CitiesComponent implements OnInit, AfterContentInit {
     const avgLat = sumLat / coordinates.length;
 
     this.googleCenter = {
-      lat: avgLat,
-      lng: avgLng
+      lat: avgLat || this.currentLocation.position.lat,
+      lng: avgLng || this.currentLocation.position.lng
     };
     this.mapZoom = 13;
   }
